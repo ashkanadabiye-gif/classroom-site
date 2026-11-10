@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<style>.feat{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}.feat .card{margin:0}.feat b{display:block;margin-bottom:4px}</style>
+<div class="card" style="text-align:center;padding:48px 20px">
+  <h1>کلاس آنلاین خودتان را در چند ثانیه بسازید</h1>
+  <p class="muted">ویدیو و صدای زنده، تخته‌ی سفید، اشتراک صفحه و فایل، آزمون سریع و گزارش حضور — مستقیم در مرورگر</p>
+  <a class="btn" href="{% url 'dashboard' %}">شروع کنید</a>
+</div>
+<div class="feat">
+  <div class="card"><b>🎥 ویدیو و صدا</b><span class="muted">اجازه‌ی میکروفون و دوربین هر دانش‌آموز دست استاد است.</span></div>
+  <div class="card"><b>✏️ تخته‌ی سفید</b><span class="muted">قلم، ماژیک، شکل‌ها، متن، لیزر و ذخیره به‌صورت عکس.</span></div>
+  <div class="card"><b>📎 اشتراک فایل</b><span class="muted">استاد فایل می‌گذارد و فقط حاضرین کلاس دانلود می‌کنند.</span></div>
+  <div class="card"><b>📊 سنجش لحظه‌ای</b><span class="muted">نظرسنجی یا آزمون چندگزینه‌ای با نتیجه‌ی زنده.</span></div>
+  <div class="card"><b>🔴 ضبط کلاس</b><span class="muted">ذخیره‌ی تصویر و صدای جلسه روی کامپیوتر استاد.</span></div>
+  <div class="card"><b>📋 حضور و غیاب</b><span class="muted">گزارش ورود، خروج و مدت حضور با خروجی Excel.</span></div>
+</div>
+{% endblock %}

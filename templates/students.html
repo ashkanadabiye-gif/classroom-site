@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}دانش‌آموزان{% endblock %}
+{% block content %}
+<style>
+table{width:100%;border-collapse:collapse}
+th,td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:right}
+.inline{display:inline;margin:0}.inline input{width:110px;padding:4px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px;align-items:end}
+.err{color:#dc2626;margin:2px 0}
+.ltr{direction:ltr;unicode-bidi:plaintext}
+</style>
+<h2>دانش‌آموزان من</h2>
+<p class="muted">این دانش‌آموزان در همه‌ی کلاس‌های شما با <b>نام و نام خانوادگی + نام کاربری + رمز عبور</b> (باید با اطلاعات ثبت‌شده یکی باشد) وارد می‌شوند. اگر رمز را خالی بگذارید یک رمز تصادفی ساخته می‌شود.</p>
+
+{% for e in errors %}<p class="err">{{ e }}</p>{% endfor %}
+
+{% if creds %}
+<div class="card" style="border-color:#16a34a">
+  <strong>اطلاعات ورود (فقط همین یک بار نمایش داده می‌شود؛ ذخیره یا برای دانش‌آموزان ارسال کنید)</strong>
+  <table class="ltr" style="margin-top:8px"><tr><th>Name</th><th>Username</th><th>Password</th></tr>
+  {% for n,u,p in creds %}<tr><td>{{ n }}</td><td>{{ u }}</td><td><b>{{ p }}</b></td></tr>{% endfor %}</table>
+  <button class="btn sec" style="margin-top:8px" onclick="var t=[].map.call(document.querySelectorAll('.card table tr'),function(r){return [].map.call(r.cells,function(c){return c.textContent}).join(' , ')}).join('\n');(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(function(){alert('کپی شد')}).catch(function(){prompt('کپی کنید:',t)})">کپی همه</button>
+</div>
+{% endif %}
+
+<div class="card">
+  <strong>افزودن دانش‌آموز</strong>
+  <form method="post" class="grid2" style="margin-top:8px">{% csrf_token %}<input type="hidden" name="action" value="add">
+    <div><label>نام و نام خانوادگی</label><input name="full_name" required></div>
+    <div><label>نام کاربری (لاتین)</label><input name="username" dir="ltr" required></div>
+    <div><label>رمز عبور (اختیاری)</label><input name="password" dir="ltr"></div>
+    <button class="btn">افزودن</button>
+  </form>
+</div>
+
+<div class="card">
+  <strong>افزودن گروهی</strong>
+  <p class="muted">هر خط یک دانش‌آموز: <span class="ltr">نام کامل , نام کاربری , رمز</span> (رمز اختیاری؛ جداکننده: ویرگول یا Tab)</p>
+  <form method="post">{% csrf_token %}<input type="hidden" name="action" value="bulk">
+    <textarea name="bulk" rows="5" dir="auto" placeholder="علی رضایی, ali1, 4321&#10;سارا احمدی, sara2"></textarea>
+    <p></p><button class="btn">افزودن همه</button>
+  </form>
+</div>
+
+<div class="card">
+  <strong>فهرست ({{ students|length }})</strong>
+  <table style="margin-top:8px">
+  {% for s in students %}
+    <tr>
+      <td>{{ s.full_name }}</td><td class="ltr">{{ s.username }}</td>
+      <td>
+        <form method="post" class="inline">{% csrf_token %}<input type="hidden" name="action" value="reset"><input type="hidden" name="id" value="{{ s.id }}">
+          <input name="password" placeholder="رمز جدید (خالی = تصادفی)" dir="ltr" style="width:150px"> <button class="btn sec">تغییر رمز</button></form>
+        <form method="post" class="inline" onsubmit="return confirm('حذف شود؟')">{% csrf_token %}<input type="hidden" name="action" value="delete"><input type="hidden" name="id" value="{{ s.id }}"><button class="btn danger">حذف</button></form>
+      </td>
+    </tr>
+  {% empty %}<tr><td class="muted">هنوز دانش‌آموزی اضافه نشده است.</td></tr>{% endfor %}
+  </table>
+</div>
+{% endblock %}

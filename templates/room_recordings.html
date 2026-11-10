@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}ضبط‌های کلاس {{ room.title }}{% endblock %}
+{% block main %}
+<div style="max-width:900px;margin:32px auto;padding:16px">
+  <div class="bar"><h2 style="margin:0">ضبط‌های کلاس: {{ room.title }}</h2><span class="muted">این کلاس پایان یافته است.</span></div>
+  {% if recordings %}
+    {% for recording in recordings %}
+      <div class="card" style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px;margin:10px 0">
+        <div><strong>🎬 {{ recording.title }}</strong><div class="muted">{{ recording.created_at|date:"Y/m/d H:i" }} · {{ recording.size|filesizeformat }}{% if recording.duration_seconds %} · {{ recording.duration_seconds }} ثانیه{% endif %}</div></div>
+        <a class="btn" href="{% url 'room_recording_download' room.owner.username room.slug recording.pk %}">دانلود ویدئو</a>
+      </div>
+    {% endfor %}
+  {% else %}<p class="muted">هنوز ضبطی برای این کلاس ذخیره نشده است.</p>{% endif %}
+  <a class="btn sec" href="{% url 'dashboard' %}">بازگشت</a>
+</div>
+{% endblock %}

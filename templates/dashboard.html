@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row"><h2>کلاس‌های من</h2><span><a class="btn sec" href="{% url 'students' %}">👥 دانش‌آموزان</a> <a class="btn" href="{% url 'room_create' %}">+ کلاس جدید</a></span></div>
+{% for r in my_rooms %}
+<div class="card row">
+  <div>
+    <strong>{{ r.title }}</strong> {% if not r.is_active %}<span class="muted">(پایان‌یافته)</span>{% endif %}
+    <div class="muted">{% if r.scheduled_at %}{{ r.scheduled_at|date:"Y/m/d H:i" }}{% endif %}</div>
+    <div class="muted" dir="ltr" style="text-align:right">{{ request.scheme }}://{{ request.get_host }}{{ r.get_absolute_url }}</div>
+    <div class="muted">{% if r.allow_guests %}ورود مهمان: مجاز{% else %}ورود مهمان: غیرمجاز{% endif %}
+      — <a href="#" onclick="var u='{{ request.scheme }}://{{ request.get_host }}{{ r.get_absolute_url }}';(navigator.clipboard?navigator.clipboard.writeText(u):Promise.reject()).catch(function(){prompt('کپی کنید:',u)});return false">کپی لینک</a></div>
+  </div>
+  <div style="display:flex;gap:6px;flex-wrap:wrap">
+    {% if r.is_active %}<a class="btn" href="{{ r.get_absolute_url }}">ورود به کلاس</a>{% else %}
+    <form method="post" action="{% url 'room_reopen' r.owner.username r.slug %}" style="margin:0">{% csrf_token %}<button class="btn sec">باز کردن دوباره</button></form>{% endif %}
+    <a class="btn sec" href="{% url 'room_report' r.owner.username r.slug %}">📋 گزارش حضور</a>
+  </div>
+</div>
+{% empty %}<p class="muted">هنوز کلاسی نساخته‌اید.</p>{% endfor %}
+
+<p class="muted">دانش‌آموزان فقط با لینک کلاس وارد می‌شوند؛ لینک را برایشان بفرستید.</p>
+{% endblock %}

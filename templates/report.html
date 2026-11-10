@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}گزارش حضور{% endblock %}
+{% block content %}
+<style>table{width:100%;border-collapse:collapse}th,td{padding:8px;border-bottom:1px solid var(--line);text-align:right}</style>
+<div class="row"><h2>گزارش حضور — {{ room.title }}</h2>
+  <span><a class="btn sec" href="?format=csv">⬇ فایل Excel (CSV)</a> <a class="btn sec" href="{% url 'dashboard' %}">بازگشت</a></span></div>
+<div class="card" style="overflow:auto">
+<table>
+  <tr><th>نام</th><th>نوع</th><th>اولین ورود</th><th>آخرین خروج</th><th>دفعات ورود</th><th>مدت حضور</th></tr>
+  {% for r in rows %}<tr><td>{{ r.name }}</td><td>{{ r.kind }}</td><td>{{ r.first_s }}</td><td>{{ r.last_s }}</td><td>{{ r.sessions }}</td><td>{{ r.dur }}</td></tr>
+  {% empty %}<tr><td colspan="6" class="muted">هنوز کسی وارد این کلاس نشده است.</td></tr>{% endfor %}
+</table></div>
+<p class="muted">مدت حضور = مجموع زمان اتصال (ساعت:دقیقه). اگر کسی هنوز داخل کلاس باشد تا همین لحظه حساب می‌شود.</p>
+{% endblock %}

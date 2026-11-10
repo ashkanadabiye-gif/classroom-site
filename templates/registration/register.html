@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card" style="max-width:420px;margin:auto">
+  <h2>ثبت‌نام</h2>
+  <form method="post">{% csrf_token %}<input type="hidden" name="next" value="{{ next }}">{{ form.as_p }}<button class="btn">ساخت حساب</button></form>
+</div>
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}{{ room.title }}{% endblock %}
+{% block nav %}{% endblock %}
+{% block main %}
+<style>
+body{background:#22344f}
+.jwrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px;
+  background:radial-gradient(circle at 20% 15%,#2f4a72 0,transparent 45%),radial-gradient(circle at 85% 85%,#2a3f63 0,transparent 40%)}
+.jcard{background:#fff;color:#1f2430;border-radius:22px;width:100%;max-width:350px;padding:30px 20px 20px;text-align:center}
+.jcard h1{font-size:1.3rem;margin:4px 0 2px}
+.jcard .sub{color:#6b7280;font-size:.88em;margin-bottom:26px}
+.jcard input{background:#e8eefc;color:#1f2430;border:0;border-radius:12px;padding:14px;margin-bottom:14px;text-align:center}
+.jbtns{display:flex;gap:12px;margin-top:6px}
+.jbtns button{flex:1;border:0;border-radius:12px;padding:12px;font:inherit;cursor:pointer}
+.jg{background:#f5c93b;color:#1f2430}.jl{background:#26b9d9;color:#fff}
+.jerr{color:#dc2626;font-size:.9em;margin:0 0 10px}
+.jfoot{margin-top:22px;font-size:.85em;color:#6b7280}
+</style>
+<div class="jwrap"><div class="jcard">
+  <div style="font-size:42px">🎓</div>
+  <h1>{{ room.title }}</h1>
+  <div class="sub">استاد: {{ room.owner.get_full_name|default:room.owner.username }}</div>
+  {% if error %}<p class="jerr">{{ error }}</p>{% endif %}
+  {% if not ended %}
+  <form method="post" id="jf">{% csrf_token %}
+    <input name="full_name" id="jn" value="{{ full_name }}" placeholder="نام و نام خانوادگی" maxlength="100" autocomplete="name" autofocus>
+    <input name="username" id="ju" value="{{ username }}" placeholder="نام کاربری (برای ورود با حساب)" maxlength="150" autocomplete="username" dir="ltr">
+    <input type="password" name="password" id="jp" placeholder="رمز عبور (برای ورود با حساب)" autocomplete="current-password">
+    <div class="jbtns">
+      {% if room.allow_guests %}<button class="jg" name="action" value="guest" id="bg">مهمان</button>{% endif %}
+      <button class="jl" name="action" value="login" id="bl">ورود</button>
+    </div>
+  </form>
+  <div class="jfoot">حساب ندارید؟ <a href="{% url 'register' %}?next={{ room.get_absolute_url }}">ثبت‌نام</a></div>
+  <script>
+  (function(){
+    var n=document.getElementById('jn'),u=document.getElementById('ju'),p=document.getElementById('jp'),g=document.getElementById('bg'),l=document.getElementById('bl');
+    // Enter: اگر نام کاربری یا رمز نوشته شده «ورود» وگرنه «مهمان»
+    function go(e){ if(e.key==='Enter'){ e.preventDefault(); ((p.value||u.value)||!g?l:g).click(); } }
+    [n,u,p].forEach(function(x){x.addEventListener('keydown',go)});
+  })();
+  </script>
+  {% endif %}
+</div></div>
+{% endblock %}

@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card" style="max-width:420px;margin:auto">
+  <h2>ورود با حساب کاربری</h2>
+  <form method="post">{% csrf_token %}<input type="hidden" name="next" value="{{ next }}">{{ form.as_p }}<button class="btn">ورود</button></form>
+  <p class="muted">حساب ندارید؟ <a href="{% url 'register' %}{% if next %}?next={{ next|urlencode }}{% endif %}">ثبت‌نام</a></p>
+</div>
+{% endblock %}
